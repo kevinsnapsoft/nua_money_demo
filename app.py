@@ -1,6 +1,5 @@
 import streamlit as st
 import requests
-import time
 
 def initialize_session_state():
     """Initialize session state variables."""
@@ -118,27 +117,6 @@ def main():
                     if upload_response.status_code == 200:
                         st.session_state.upload_complete = True
                         progress_container.success("File uploaded successfully!")
-                        
-                        # Wait for processing
-                        status_text.info("Processing your PDF... This may take a few moments.")
-                        
-                        # Check status for up to 2 minutes
-                        for i in range(24):  # 24 * 5 seconds = 2 minutes
-                            # Try to access the download URL
-                            try:
-                                response = requests.head(urls['download_url'])
-                                if response.status_code == 200:
-                                    st.session_state.processing_complete = True
-                                    status_text.success("Processing complete! Your CSV file is ready.")
-                                    st.markdown(f"[Download your processed CSV file]({urls['download_url']})")
-                                    break
-                            except:
-                                pass
-                                
-                            time.sleep(5)
-                        else:
-                            status_text.warning("Processing is taking longer than expected. Please check back later using the download link.")
-                            st.markdown(f"[Check your CSV file here]({urls['download_url']})")
                             
                     else:
                         progress_container.error("Failed to upload file.")
